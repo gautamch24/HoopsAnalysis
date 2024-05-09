@@ -74,7 +74,7 @@ print("Accuracy:", accuracy_score(y_test, predictions))
 
 
 # Save the trained model to a file
-model_path = 'ridge_classifier_model.py'
-joblib.dump(ridge_classifier, model_path)
+model_path = 'ridge_classifier_model.pkl'
+joblib.dump(model_pipeline, model_path)
 print("Model saved to", model_path)
 # Saves the trained model to a file using joblib for later use in making predictions on new data.
