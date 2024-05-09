@@ -21,15 +21,20 @@ def process_and_predict(data_path, model_path, output_path):
     # Fill missing values with the mean (or any other imputation method)
     data[features] = data[features].fillna(data[features].mean())
 
+
+    # IF NO PIPELINE 
     # Scale the features using MinMaxScaler (assuming this was used during model training)
-    scaler = MinMaxScaler()
-    data[features] = scaler.fit_transform(data[features])
+    # scaler = MinMaxScaler()
+    # data[features] = scaler.fit_transform(data[features])
 # Defines the features used by the model, fills missing values, and scales the features similarly to the training process.
-
-
     # Load the trained Ridge Classifier model
-    model = joblib.load(model_path)
+    # model = joblib.load(model_path)
+    # IF NI PIPELINE
 
+
+    # Load the trained pipeline (model + scaler)
+    model_pipeline = joblib.load(model_path)
+    
     # Predict the outcome
     data['predicted_won'] = model.predict(data[features])
 # Loads the saved model and uses it to make predictions on the new data.
