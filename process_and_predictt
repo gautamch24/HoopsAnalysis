@@ -5,8 +5,12 @@ import joblib
 
 # Define a function to preprocess and predict using new data
 def process_and_predict(data_path, model_path, output_path):
+# Defines a function named process_and_predict that takes paths to the data, the model, and where to save the output.
+
+
     # Load new data
     data = pd.read_csv(data_path)
+
 
     # Define the features expected by the model
     features = [
@@ -20,12 +24,16 @@ def process_and_predict(data_path, model_path, output_path):
     # Scale the features using MinMaxScaler (assuming this was used during model training)
     scaler = MinMaxScaler()
     data[features] = scaler.fit_transform(data[features])
+# Defines the features used by the model, fills missing values, and scales the features similarly to the training process.
+
 
     # Load the trained Ridge Classifier model
     model = joblib.load(model_path)
 
     # Predict the outcome
     data['predicted_won'] = model.predict(data[features])
+# Loads the saved model and uses it to make predictions on the new data.
+
 
     # Save the predictions to a new CSV file
     data.to_csv(output_path, index=False)
@@ -38,3 +46,4 @@ if __name__ == "__main__":
     output_path = 'predictions.csv'             # Path to save the predictions
 
     process_and_predict(data_path, model_path, output_path)
+# Saves the new data with predictions appended to a CSV file and prints the location of the saved file.
