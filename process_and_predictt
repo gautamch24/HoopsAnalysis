@@ -1,0 +1,40 @@
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.linear_model import RidgeClassifier
+import joblib
+
+# Define a function to preprocess and predict using new data
+def process_and_predict(data_path, model_path, output_path):
+    # Load new data
+    data = pd.read_csv(data_path)
+
+    # Define the features expected by the model
+    features = [
+        'Pace', 'eFG%', 'TOV%', 'ORB%', 'FT/FGA', 'ORtg', 'Home',
+        'Pace_opp', 'eFG%_opp', 'TOV%_opp', 'ORB%_opp', 'FT/FGA_opp', 'ORtg_opp', 'Home_opp'
+    ]
+
+    # Fill missing values with the mean (or any other imputation method)
+    data[features] = data[features].fillna(data[features].mean())
+
+    # Scale the features using MinMaxScaler (assuming this was used during model training)
+    scaler = MinMaxScaler()
+    data[features] = scaler.fit_transform(data[features])
+
+    # Load the trained Ridge Classifier model
+    model = joblib.load(model_path)
+
+    # Predict the outcome
+    data['predicted_won'] = model.predict(data[features])
+
+    # Save the predictions to a new CSV file
+    data.to_csv(output_path, index=False)
+    print("Predictions saved to:", output_path)
+
+# Usage example
+if __name__ == "__main__":
+    data_path = 'pastNbaGames.csv'  # data file path
+    model_path = 'ridge_classifier_model.pkl'   # Path to saved model
+    output_path = 'predictions.csv'             # Path to save the predictions
+
+    process_and_predict(data_path, model_path, output_path)
