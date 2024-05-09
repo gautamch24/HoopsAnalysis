@@ -5,6 +5,13 @@ from sklearn.linear_model import RidgeClassifier
 from sklearn.metrics import accuracy_score
 import joblib
 
+# pandas: For data manipulation and analysis.
+# train_test_split: To split the data into training and testing sets.
+# MinMaxScaler: To normalize the feature data.
+# RidgeClassifier: A classifier that uses Ridge regression.
+# accuracy_score: To evaluate the accuracy of the model.
+# joblib: For saving and loading the model.
+
 # Load your dataset
 data_path = 'pastNbaGames.csv'  #  path to your dataset
 data = pd.read_csv(data_path)
