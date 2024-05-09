@@ -12,11 +12,12 @@ import joblib
 # RidgeClassifier: A classifier that uses Ridge regression.
 # accuracy_score: To evaluate the accuracy of the model.
 # joblib: For saving and loading the model.
+# pipeline: # Importing Pipeline to sequentially apply a list of transforms and a final estimator.
 
 
 # Load your dataset
 data_path = 'pastNbaGames.csv'  #  path to your dataset
-data = pd.read_csv(data_path)
+data = pd.read_csv(data_path)  # read data set into panda data frame
 # Loads the data from CSV file into a DataFrame.
 
 
@@ -25,7 +26,7 @@ features = [
     'Pace', 'eFG%', 'TOV%', 'ORB%', 'FT/FGA', 'ORtg', 'Home',
     'Pace_opp', 'eFG%_opp', 'TOV%_opp', 'ORB%_opp', 'FT/FGA_opp', 'ORtg_opp', 'Home_opp'
 ]
-target = 'won'  # Update if target variable name is different
+target = 'won'  
 # Specifies which columns in the dataset are used as features for training and which column is the target (outcome).
 
 
@@ -64,13 +65,16 @@ model_pipeline = Pipeline([
     ('scaler', MinMaxScaler()),
     ('classifier', RidgeClassifier())
 ])
+# Creating a pipeline that first scales the data then applies the Ridge classifier.
 
-# Train the pipeline
+
+# Train the pipeline on training data
 model_pipeline.fit(X_train, y_train)
 
 # Predict on the test set
 predictions = model_pipeline.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, predictions))
+# Using the trained pipeline to make predictions on the test data.
 
 
 # Save the trained model to a file
