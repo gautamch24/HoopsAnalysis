@@ -36,7 +36,7 @@ def process_and_predict(data_path, model_path, output_path):
     model_pipeline = joblib.load(model_path)
     
     # Predict the outcome
-    data['predicted_won'] = model.predict(data[features])
+    data['predicted_won'] = model_pipeline.predict(data[features])
 # Loads the saved model and uses it to make predictions on the new data.
 
 
@@ -47,7 +47,7 @@ def process_and_predict(data_path, model_path, output_path):
 # Usage example
 if __name__ == "__main__":
     data_path = 'pastNbaGames.csv'  # data file path
-    model_path = 'ridge_classifier_model.py'   # Path to saved model
+    model_path = 'ridge_classifier_model.pkl'   # Path to saved model
     output_path = 'predictions.csv'             # Path to save the predictions
 
     process_and_predict(data_path, model_path, output_path)
