@@ -18,7 +18,7 @@ def process_and_predict(data_path, model_path, output_path):
         'Pace_opp', 'eFG%_opp', 'TOV%_opp', 'ORB%_opp', 'FT/FGA_opp', 'ORtg_opp', 'Home_opp'
     ]
 
-    # Fill missing values with the mean (or any other imputation method)
+    # Fill missing values with the mean 
     data[features] = data[features].fillna(data[features].mean())
 
 
