@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.linear_model import RidgeClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.pipeline import Pipeline
 import joblib
 
 # pandas: For data manipulation and analysis.
@@ -42,28 +43,38 @@ data[target] = data[target].astype(int)
 X_train, X_test, y_train, y_test = train_test_split(data[features], data[target], test_size=0.3, random_state=42)
 # Divides the data into training and testing sets, with 30% of the data reserved for testing the model.
 
-
+# IF NO PIPELINE
 # Scale features
-scaler = MinMaxScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+# scaler = MinMaxScaler()
+# X_train_scaled = scaler.fit_transform(X_train)
+# X_test_scaled = scaler.transform(X_test)
 # Normalizes the feature data to ensure that all features contribute equally to the model training, improving performance.
-
-
 # Initialize and train the Ridge Classifier
-ridge_classifier = RidgeClassifier()
-ridge_classifier.fit(X_train_scaled, y_train)
+# ridge_classifier = RidgeClassifier()
+# ridge_classifier.fit(X_train_scaled, y_train)
 # Creates a Ridge Classifier and trains it on the normalized training data.
+# Predict on the test set
+# predictions = ridge_classifier.predict(X_test_scaled)
+# print("Accuracy:", accuracy_score(y_test, predictions))
+# Makes predictions on the testing set and prints the accuracy of the model.
+# IF NO PIPELINE
 
+# Create a pipeline with scaler and model
+model_pipeline = Pipeline([
+    ('scaler', MinMaxScaler()),
+    ('classifier', RidgeClassifier())
+])
+
+# Train the pipeline
+model_pipeline.fit(X_train, y_train)
 
 # Predict on the test set
-predictions = ridge_classifier.predict(X_test_scaled)
+predictions = model_pipeline.predict(X_test)
 print("Accuracy:", accuracy_score(y_test, predictions))
-# Makes predictions on the testing set and prints the accuracy of the model.
 
 
 # Save the trained model to a file
-model_path = 'ridge_classifier_model.pkl'
+model_path = 'ridge_classifier_model.py'
 joblib.dump(ridge_classifier, model_path)
 print("Model saved to", model_path)
 # Saves the trained model to a file using joblib for later use in making predictions on new data.
