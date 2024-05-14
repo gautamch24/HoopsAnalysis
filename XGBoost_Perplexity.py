@@ -1,5 +1,6 @@
 import pandas as pd
 import xgboost as xgb
+from xgboost import XGBClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from sklearn.metrics import accuracy_score
@@ -13,6 +14,10 @@ def preprocess_data(file_path):
     # Handle missing values
     data = data.dropna()
 
+    # Drop the date column
+    if 'date' in data.columns:
+        data = data.drop(columns=['date'])
+
     # Encode categorical features
     categorical_cols = ['team', 'team_opp']
     numerical_cols = [col for col in data.columns if col not in categorical_cols + ['won']]
@@ -23,8 +28,7 @@ def preprocess_data(file_path):
 
     # One-hot encoding for categorical features
     categorical_transformer = OneHotEncoder(handle_unknown='ignore')
-    categorical_transformer = categorical_transformer.fit(data[categorical_cols])
-
+    
     # Create column transformer
     preprocessor = ColumnTransformer(
         transformers=[
@@ -33,13 +37,13 @@ def preprocess_data(file_path):
         ])
 
     # Transform data
-    X = preprocessor.transform(data)
+    X = preprocessor.fit_transform(data)
     y = data['won']
 
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, preprocessor
 
 # Model training function
 def train_model(X_train, X_test, y_train, y_test):
@@ -66,7 +70,7 @@ def train_model(X_train, X_test, y_train, y_test):
 # Main function
 def main():
     # Load data and preprocess
-    X_train, X_test, y_train, y_test = preprocess_data("pastNbaGames.csv")
+    X_train, X_test, y_train, y_test, preprocessor = preprocess_data("pastNbaGames.csv")
 
     # Train the model
     model = train_model(X_train, X_test, y_train, y_test)
@@ -80,12 +84,22 @@ def main():
     print(f"Accuracy: {accuracy * 100:.2f}%")
 
     # Make predictions on new data
-    new_data = ... # Load new data for prediction
-    predictions = model.predict(xgb.DMatrix(new_data))
+    # Note: Replace the placeholder with actual new data loading logic
+    new_data = pd.DataFrame({
+        'team': ['team1'],
+        'team_opp': ['team2'],
+        # Add all the numerical features here with appropriate values
+        # 'feature1': [value1],
+        # 'feature2': [value2],
+        # ...
+    })
+    
+    new_data_transformed = preprocessor.transform(new_data)
+    new_predictions = model.predict(xgb.DMatrix(new_data_transformed))
 
     # Print predictions
     print("Predictions:")
-    for pred in predictions:
+    for pred in new_predictions:
         print(f"Predicted outcome: {'Win' if pred > 0.5 else 'Loss'}")
 
 if __name__ == "__main__":
